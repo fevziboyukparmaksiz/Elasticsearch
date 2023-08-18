@@ -18,6 +18,7 @@ namespace Elasticsearch.API.Repositories
 
             var response = await _client.IndexAsync(newProduct, x => x.Index("products"));
 
+            //FastFail
             if (!response.IsValid) return null;
 
             newProduct.Id = response.Id;

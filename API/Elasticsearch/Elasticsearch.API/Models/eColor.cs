@@ -1,6 +1,6 @@
 ﻿namespace Elasticsearch.API.Models
 {
-    public enum eColor
+    public enum EColor
     {
         Red = 1,
         Blue = 2,
