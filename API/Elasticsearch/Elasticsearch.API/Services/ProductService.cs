@@ -17,7 +17,7 @@ namespace Elasticsearch.API.Services
         {
             var responseProduct = await _repository.SaveAsync(request.CreateProduct());
 
-            if(responseProduct == null)
+            if (responseProduct == null)
             {
                 return ResponseDto<ProductDto>.Fail(new List<string> { "Kayıt esnasında bir hata meydana geldi" }, HttpStatusCode.InternalServerError);
             }
