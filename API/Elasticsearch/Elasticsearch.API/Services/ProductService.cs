@@ -1,21 +1,23 @@
 ﻿using Elasticsearch.API.DTOs;
+using Elasticsearch.API.Models;
 using Elasticsearch.API.Repositories;
+using System.Collections.Immutable;
 using System.Net;
 
 namespace Elasticsearch.API.Services
 {
     public class ProductService
     {
-        private readonly ProductRepository _repository;
+        private readonly ProductRepository _productRepository;
 
-        public ProductService(ProductRepository repository)
+        public ProductService(ProductRepository productRepository)
         {
-            _repository = repository;
+            _productRepository = productRepository;
         }
 
         public async Task<ResponseDto<ProductDto>> SaveAsync(ProductCreateDto request)
         {
-            var responseProduct = await _repository.SaveAsync(request.CreateProduct());
+            var responseProduct = await _productRepository.SaveAsync(request.CreateProduct());
 
             if (responseProduct == null)
             {
@@ -23,6 +25,27 @@ namespace Elasticsearch.API.Services
             }
 
             return ResponseDto<ProductDto>.Success(responseProduct.CreateDto(), HttpStatusCode.Created);
+        }
+
+        public async Task<ResponseDto<List<ProductDto>>> GetAllAsync()
+        {
+            var products = await _productRepository.GetAllAsync();
+
+            var productListDto = new List<ProductDto>();
+
+            foreach (var x in products)
+            {
+                if (x.Feature is null)
+                {
+                    productListDto.Add(new ProductDto(x.Id, x.Name, x.Price, x.Stock, null));
+                }
+                else
+                {
+                    productListDto.Add(new ProductDto(x.Id, x.Name, x.Price, x.Stock, new ProductFeatureDto(x.Feature.Width, x.Feature.Height, x.Feature.Color)));
+                }
+            }
+
+            return ResponseDto<List<ProductDto>>.Success(productListDto, HttpStatusCode.OK);
         }
     }
 }
