@@ -59,6 +59,18 @@ namespace Elasticsearch.API.Services
 
             return ResponseDto<ProductDto>.Success(hasProduct.CreateDto(), HttpStatusCode.OK);
         }
+
+        public async Task<ResponseDto<bool>> UpdateAsync(ProductUpdateDto request)
+        {
+            var isSuccess = await _productRepository.UpdateAsync(request);
+
+            if (!isSuccess)
+            {
+                return ResponseDto<bool>.Fail(new List<string> { "Update esnasında bir hata meydana geldi" }, HttpStatusCode.InternalServerError);
+            }
+
+            return ResponseDto<bool>.Success(true, HttpStatusCode.NoContent);
+        }
     }
 
 }
