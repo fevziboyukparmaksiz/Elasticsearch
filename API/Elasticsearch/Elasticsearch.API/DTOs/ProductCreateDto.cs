@@ -14,7 +14,7 @@ namespace Elasticsearch.API.DTOs
                 Stock = stock,
                 Feature = new ProductFeature()
                 {
-                    Color = Feature.Color,
+                    Color = (EColor)int.Parse(Feature.Color.ToString()),
                     Width = Feature.Width,
                     Height = Feature.Height
                 }

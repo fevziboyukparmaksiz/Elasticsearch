@@ -38,14 +38,27 @@ namespace Elasticsearch.API.Services
                 if (x.Feature is null)
                 {
                     productListDto.Add(new ProductDto(x.Id, x.Name, x.Price, x.Stock, null));
+                    continue;
                 }
-                else
-                {
-                    productListDto.Add(new ProductDto(x.Id, x.Name, x.Price, x.Stock, new ProductFeatureDto(x.Feature.Width, x.Feature.Height, x.Feature.Color)));
-                }
+
+                productListDto.Add(new ProductDto(x.Id, x.Name, x.Price, x.Stock, new ProductFeatureDto(x.Feature.Width, x.Feature.Height, x.Feature.Color.ToString())));
+
             }
 
             return ResponseDto<List<ProductDto>>.Success(productListDto, HttpStatusCode.OK);
         }
+
+        public async Task<ResponseDto<ProductDto>> GetByIdAsync(string id)
+        {
+            var hasProduct = await _productRepository.GetByIdAsync(id);
+
+            if (hasProduct == null)
+            {
+                return ResponseDto<ProductDto>.Fail("ürün bulunamadı", HttpStatusCode.NotFound);
+            }
+
+            return ResponseDto<ProductDto>.Success(hasProduct.CreateDto(), HttpStatusCode.OK);
+        }
     }
+
 }
