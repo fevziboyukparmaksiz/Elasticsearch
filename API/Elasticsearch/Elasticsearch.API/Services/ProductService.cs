@@ -1,6 +1,7 @@
 ﻿using Elasticsearch.API.DTOs;
 using Elasticsearch.API.Models;
 using Elasticsearch.API.Repositories;
+using Nest;
 using System.Collections.Immutable;
 using System.Net;
 
@@ -67,6 +68,18 @@ namespace Elasticsearch.API.Services
             if (!isSuccess)
             {
                 return ResponseDto<bool>.Fail(new List<string> { "Update esnasında bir hata meydana geldi" }, HttpStatusCode.InternalServerError);
+            }
+
+            return ResponseDto<bool>.Success(true, HttpStatusCode.NoContent);
+        }
+
+        public async Task<ResponseDto<bool>> DeleteAsync(string id)
+        {
+            var isSuccess = await _productRepository.DeleteAsync(id);
+
+            if (!isSuccess)
+            {
+                return ResponseDto<bool>.Fail(new List<string> { "Silme esnasında bir hata meydana geldi" }, HttpStatusCode.InternalServerError);
             }
 
             return ResponseDto<bool>.Success(true, HttpStatusCode.NoContent);

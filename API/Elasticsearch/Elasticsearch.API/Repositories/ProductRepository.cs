@@ -39,7 +39,7 @@ namespace Elasticsearch.API.Repositories
 
         public async Task<Product?> GetByIdAsync(string id)
         {
-            var response = await _client.GetAsync<Product>(id, x => x.Index("products"));
+            var response = await _client.GetAsync<Product>(id, x => x.Index(IndexName));
 
             if (!response.IsValid)
                 return null;
@@ -51,8 +51,14 @@ namespace Elasticsearch.API.Repositories
 
         public async Task<bool> UpdateAsync(ProductUpdateDto updateProduct)
         {
-            var response = await _client.UpdateAsync<Product, ProductUpdateDto>(updateProduct.id, x => x.Index("products").Doc(updateProduct));
+            var response = await _client.UpdateAsync<Product, ProductUpdateDto>(updateProduct.id, x => x.Index(IndexName).Doc(updateProduct));
 
+            return response.IsValid;
+        }
+
+        public async Task<bool> DeleteAsync(string id)
+        {
+            var response = await _client.DeleteAsync<Product>(id, x => x.Index(IndexName));
             return response.IsValid;
         }
     }
